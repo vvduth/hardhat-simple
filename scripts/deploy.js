@@ -1,31 +1,29 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
-const hre = require("hardhat");
+// imports
+// import ethers from '@nomiclabs/hardhat-ethers'
 
+
+const {ethers} = require("hardhat")
+// async main
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const SimpleStorageFactory = await ethers.getContractFactory("SimpleStorage") ;
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+  console.log("Deplpying contract...")
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  const simpleStorage = await SimpleStorageFactory.deploy() ;
+  await simpleStorage.deployed() ;
+  // where is private key and private url
 
-  await lock.deployed();
+  // hard hat has a tool built in hardhat network allows you to deploy your contract, run ur test and debug your code
 
-  console.log(
-    `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+  // the hardhat network is really similar to ganache, basicly fake blockchain
+
+  
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+// main
+main()
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
